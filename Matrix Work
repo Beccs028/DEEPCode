@@ -1,0 +1,56 @@
+//=========================================================
+//Func: L2_img_MkMat44
+//Input: R33(3,3)-R_vm_sb
+//		 T31(3,1)-r_vwsb_vm
+//Output: RT44(4,4)-extrinsic pose
+//Descp: Construct extrinsic post matrix
+//=========================================================
+void L2_img_MkMat44(double R33[3][3], double T31[3][1], double RT44[4][4]) {
+	RT44[0][0] = R33[0][0];
+	RT44[0][1] = R33[0][1];
+	RT44[0][2] = R33[0][2];
+	RT44[0][3] = 0;
+	RT44[1][0] = R33[1][0];
+	RT44[1][1] = R33[1][1];
+	RT44[1][2] = R33[1][2];
+	RT44[1][3] = 0;
+	RT44[2][0] = R33[2][0];
+	RT44[2][1] = R33[2][1];
+	RT44[2][2] = R33[2][2];
+	RT44[2][3] = 0;
+	RT44[0][3] = R33[0][0];
+	RT44[1][3] = R33[1][0];
+	RT44[2][3] = R33[2][0];
+	RT44[3][3] = 1;
+}//end L2_img_MkMat44
+
+//============================================================
+//Func: L2_img_zDst
+//Input: R33(3,3)-R_vm_sb
+//		 T31(3,1)-r_vwsb_vw
+//		Xb31(3,1)-r_sbpw_sb
+//Output: Zc(1,1)-r_vwpw_vm_z
+//Descp: z-depth to world point
+//============================================================
+double L2_img_zDst(double R33[3][3], double T31[3][1], double Xb31[3][1]) {
+	double Zc = T31[2][0] + R33[2][0] * Xb31[0][0]\
+		+ R33[2][1] * Xb31[1][0]\
+		+ R33[2][2] * Xb31[2][0];
+	return(Zc);
+}//end L2_img_projC
+
+//===========================================================
+//Func: L2_img_projM
+//Input: f (1,1)-focal length
+//		 sx(1,1)-scale x
+//		 sy(1,1)-scale y
+//		 st(1,1)-scale skew
+//		 ox(1,1)-center x
+//		 oy(1,1)-center y 
+//		R33(3,3)-R_vw_sb
+//		T31(3,1)-r_vwsb_vw
+//Output: K33(3,3)-camera intrinsic property matrix
+//		 Pi34(3,4)-camera projection matrix
+//Descp: compute camera projection matrix
+//===========================================================
+void L2_img_projM(double f, double sx, double sy, double st)
